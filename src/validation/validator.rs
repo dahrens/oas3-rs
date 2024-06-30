@@ -261,8 +261,6 @@ impl ValidationTree {
 
                             if let Some(validator) = validator_map.get(prop) {
                                 validator.validate_inner(val, child_path)?;
-                            } else {
-                                return Err(Error::UndocumentedField(child_path.to_string()));
                             }
                         }
                     }
@@ -413,13 +411,13 @@ components:
         let test = json!({ "size": 123, "thing": "qwerty" });
         valtree.validate(&test).unwrap();
 
+        let test = json!({ "size": 123, "other": "what" });
+        valtree.validate(&test).unwrap();
+
         let test = json!({ "thing": "qwerty" });
         valtree.validate(&test).unwrap_err();
 
         let test = json!({ "size": "qwerty" });
-        valtree.validate(&test).unwrap_err();
-
-        let test = json!({ "size": 123, "other": "what" });
         valtree.validate(&test).unwrap_err();
     }
 
